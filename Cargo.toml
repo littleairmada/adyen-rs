@@ -1,10 +1,10 @@
 [package]
 name = "adyen"
-version = "0.1.6"
+version = "0.1.0"
 edition = "2021"
 license = "MIT"
-description = "A library for integrating with Worldline (formerly Bambora)'s Checkout API."
-repository = "https://github.com/third-act/worldline/"
+description = "A library for integrating with the Adyen payment provider."
+repository = "https://github.com/third-act/adyen/"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
