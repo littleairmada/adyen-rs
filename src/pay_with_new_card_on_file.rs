@@ -1,8 +1,5 @@
-use crate::{
-    currency::Currency, error::Error, Gateway,
-};
-use serde::{Serialize, Deserialize};
-use crate::card_on_file::CardOnFile;
+use crate::{card_on_file::CardOnFile, currency::Currency, error::Error, Gateway};
+use serde::{Deserialize, Serialize};
 
 impl Gateway {
     pub async fn pay_with_new_card_on_file<'a>(
@@ -15,7 +12,7 @@ impl Gateway {
         encrypted_expiry_month: &'a str,
         encrypted_expiry_year: &'a str,
         encrypted_security_code: &'a str,
-        holder_name: &'a str,
+        holder_name: &'a Option<&'a str>,
         return_url: &'a str,
         merchant_account: &'a str,
     ) -> Result<(String, CardOnFile), Error> {
@@ -35,11 +32,17 @@ impl Gateway {
         #[serde(rename_all = "camelCase")]
         struct PaymentMethod<'a> {
             r#type: &'a str,
+
             encrypted_card_number: &'a str,
+
             encrypted_expiry_month: &'a str,
+
             encrypted_expiry_year: &'a str,
+
             encrypted_security_code: &'a str,
-            holder_name: &'a str,
+
+            #[serde(skip_serializing_if = "Option::is_none")]
+            holder_name: &'a Option<&'a str>,
         }
 
         let payment_method = PaymentMethod {
@@ -83,7 +86,7 @@ impl Gateway {
             card_holder_name: String,
             issuer_country: String,
             card_summary: String,
-            expiry_date: String, // The expiry date on the card (M/yyyy).
+            expiry_date: String,    // The expiry date on the card (M/yyyy).
             payment_method: String, // visa, mastercard, etc.
 
             #[serde(rename = "recurring.recurringDetailReference")]

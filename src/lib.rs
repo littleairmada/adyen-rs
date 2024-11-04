@@ -7,12 +7,10 @@ mod currency;
 pub use currency::Currency;
 mod card_on_file;
 pub use card_on_file::CardOnFile;
-mod pay_with_new_card_on_file;
 mod pay_with_card_on_file;
+mod pay_with_new_card_on_file;
 pub mod prelude {
-    pub use super::{
-        Gateway, CardOnFile, Currency,
-    };
+    pub use super::{CardOnFile, Currency, Gateway};
 }
 
 pub struct Gateway {
@@ -49,10 +47,7 @@ pub fn convert_decimal_into_minor_units<'a>(
 }
 
 impl Gateway {
-    pub fn new(
-        api_key: String,
-        timeout: Option<Duration>,
-    ) -> Result<Gateway, Error> {
+    pub fn new(api_key: String, timeout: Option<Duration>) -> Result<Gateway, Error> {
         let mut headers = reqwest::header::HeaderMap::new();
         headers.insert(
             "Content-Type",
@@ -63,10 +58,9 @@ impl Gateway {
             reqwest::header::HeaderValue::from_static("application/json"),
         );
 
-        let x_api_key_header_value = format!(
-            "{}", api_key
-        );
-        let x_api_key_header = match reqwest::header::HeaderValue::from_str(&x_api_key_header_value) {
+        let x_api_key_header_value = format!("{}", api_key);
+        let x_api_key_header = match reqwest::header::HeaderValue::from_str(&x_api_key_header_value)
+        {
             Ok(header) => header,
             Err(err) => {
                 return Err(Error::Unspecified(format!(

@@ -1,7 +1,5 @@
-use crate::{
-    currency::Currency, error::Error, Gateway,
-};
-use serde::{Serialize, Deserialize};
+use crate::{currency::Currency, error::Error, Gateway};
+use serde::{Deserialize, Serialize};
 
 impl Gateway {
     pub async fn pay_with_card_on_file<'a>(
