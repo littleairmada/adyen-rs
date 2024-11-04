@@ -9,6 +9,7 @@ mod card_on_file;
 pub use card_on_file::CardOnFile;
 mod pay_with_card_on_file;
 mod pay_with_new_card_on_file;
+mod refund;
 pub mod prelude {
     pub use super::{CardOnFile, Currency, Gateway};
 }
