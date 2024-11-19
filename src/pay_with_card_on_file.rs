@@ -1,7 +1,9 @@
-use crate::{currency::Currency, error::Error, Gateway};
-use serde::{Deserialize, Serialize};
+use crate::{currency::Currency, error::Error, payment, Gateway};
+use serde::Serialize;
 
 impl Gateway {
+    // https://docs.adyen.com/payment-methods/cards/custom-card-integration/#make-payment-with-token
+    // https://docs.adyen.com/online-payments/tokenization/advanced-flow/#pay-with-a-token
     pub async fn pay_with_card_on_file<'a>(
         &self,
         amount: u64,
@@ -11,7 +13,7 @@ impl Gateway {
         stored_payment_method_id: &'a str,
         return_url: &'a str,
         merchant_account: &'a str,
-    ) -> Result<String, Error> {
+    ) -> Result<payment::Response, Error> {
         #[derive(Serialize)]
         #[serde(rename_all = "camelCase")]
         struct Amount<'a> {
@@ -60,16 +62,9 @@ impl Gateway {
             merchant_account,
         };
 
-        #[derive(Deserialize)]
-        #[serde(rename_all = "camelCase")]
-        struct Response {
-            psp_reference: String,
-            // result_code: String,
-        }
-
         let url = "https://checkout-test.adyen.com/v71/payments";
-        let res: Response = self.post(url, &body).await?;
+        let res: payment::Response = self.post(url, &body).await?;
 
-        Ok(res.psp_reference)
+        Ok(res)
     }
 }

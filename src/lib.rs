@@ -5,13 +5,20 @@ mod error;
 pub use error::Error;
 mod currency;
 pub use currency::Currency;
-mod card_on_file;
-pub use card_on_file::CardOnFile;
+mod action;
+mod browser_info;
+pub use browser_info::BrowserInfo;
 mod pay_with_card_on_file;
 mod pay_with_new_card_on_file;
+mod payment;
 mod refund;
 pub mod prelude {
-    pub use super::{CardOnFile, Currency, Gateway};
+    pub use super::{
+        action::{Action, Scheme as SchemeAction, SchemeRedirectData},
+        browser_info::BrowserInfo,
+        payment::{RefusalReason, Response},
+        Currency, Gateway,
+    };
 }
 
 pub struct Gateway {

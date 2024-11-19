@@ -1,7 +1,8 @@
-use crate::{card_on_file::CardOnFile, currency::Currency, error::Error, Gateway};
-use serde::{Deserialize, Serialize};
+use crate::{currency::Currency, error::Error, payment, BrowserInfo, Gateway};
+use serde::Serialize;
 
 impl Gateway {
+    // https://docs.adyen.com/payment-methods/cards/custom-card-integration/#make-a-payment
     pub async fn pay_with_new_card_on_file<'a>(
         &self,
         amount: u64,
@@ -15,7 +16,13 @@ impl Gateway {
         holder_name: &'a Option<&'a str>,
         return_url: &'a str,
         merchant_account: &'a str,
-    ) -> Result<(String, CardOnFile), Error> {
+        channel: &'a Option<&'a str>,
+        browser_info: &'a Option<&'a BrowserInfo>,
+        shopper_email: &'a Option<&'a str>,
+        shopper_i_p: &'a Option<&'a str>,
+        origin: &'a Option<&'a str>,
+        three_d_s_preferred: bool,
+    ) -> Result<payment::Response, Error> {
         #[derive(Serialize)]
         #[serde(rename_all = "camelCase")]
         struct Amount<'a> {
@@ -56,21 +63,67 @@ impl Gateway {
 
         #[derive(Serialize)]
         #[serde(rename_all = "camelCase")]
+        struct ThreeDSRequestData {
+            native_three_d_s: String,
+        }
+
+        #[derive(Serialize)]
+        #[serde(rename_all = "camelCase")]
+        struct AuthenticationData {
+            three_d_s_request_data: ThreeDSRequestData,
+        }
+
+        #[derive(Serialize)]
+        #[serde(rename_all = "camelCase")]
         struct Request<'a> {
             amount: Amount<'a>,
+
             reference: &'a str,
+
             payment_method: PaymentMethod<'a>,
+
+            #[serde(skip_serializing_if = "Option::is_none")]
+            authentication_data: Option<AuthenticationData>,
+
             shopper_reference: &'a str,
+
             shopper_interaction: &'a str,
+
             recurring_processing_model: &'a str,
+
             store_payment_method: bool,
+
             return_url: &'a str,
+
             merchant_account: &'a str,
+
+            #[serde(skip_serializing_if = "Option::is_none")]
+            shopper_email: &'a Option<&'a str>,
+
+            #[serde(skip_serializing_if = "Option::is_none")]
+            shopper_i_p: &'a Option<&'a str>,
+
+            #[serde(skip_serializing_if = "Option::is_none")]
+            channel: &'a Option<&'a str>,
+
+            #[serde(skip_serializing_if = "Option::is_none")]
+            origin: &'a Option<&'a str>,
+
+            #[serde(skip_serializing_if = "Option::is_none")]
+            browser_info: &'a Option<&'a BrowserInfo>,
         }
 
         let body = Request {
             amount,
             payment_method,
+            authentication_data: match three_d_s_preferred {
+                true => Some(AuthenticationData {
+                    three_d_s_request_data: ThreeDSRequestData {
+                        native_three_d_s: "preferred".to_string(),
+                    },
+                }),
+                false => None,
+            },
             reference,
             shopper_reference, // Min length: 3, Max length: 256
             shopper_interaction: "Ecommerce",
@@ -78,45 +131,16 @@ impl Gateway {
             store_payment_method: true,
             return_url,
             merchant_account,
+            shopper_email,
+            shopper_i_p,
+            channel,
+            origin,
+            browser_info,
         };
-
-        #[derive(Deserialize)]
-        #[serde(rename_all = "camelCase")]
-        struct AdditionalData {
-            card_holder_name: String,
-            issuer_country: String,
-            card_summary: String,
-            expiry_date: String,    // The expiry date on the card (M/yyyy).
-            payment_method: String, // visa, mastercard, etc.
-
-            #[serde(rename = "recurring.recurringDetailReference")]
-            recurring_detail_reference: String,
-        }
-
-        #[derive(Deserialize)]
-        #[serde(rename_all = "camelCase")]
-        struct Response {
-            additional_data: AdditionalData,
-            psp_reference: String,
-            // result_code: String,
-            // merchant_reference: String,
-            // refusal_reason: String,
-            // refusal_reason_code: u8,
-        }
 
         let url = "https://checkout-test.adyen.com/v71/payments";
-        let res: Response = self.post(url, &body).await?;
+        let res: payment::Response = self.post(url, &body).await?;
 
-        // Make a card on file object.
-        let card_on_file = CardOnFile {
-            holder_name: res.additional_data.card_holder_name,
-            issuer_country: res.additional_data.issuer_country,
-            card_summary: res.additional_data.card_summary,
-            expiry_date: res.additional_data.expiry_date,
-            r#type: res.additional_data.payment_method,
-            recurring_detail_reference: res.additional_data.recurring_detail_reference,
-        };
-
-        Ok((res.psp_reference, card_on_file))
+        Ok(res)
     }
 }

@@ -2,6 +2,7 @@ use crate::{currency::Currency, error::Error, Gateway};
 use serde::{Deserialize, Serialize};
 
 impl Gateway {
+    // https://docs.adyen.com/online-payments/refund/#refund-cancel-or-reverse-a-payment
     pub async fn refund<'a>(
         &self,
         amount: u64,
