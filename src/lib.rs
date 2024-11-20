@@ -1,5 +1,5 @@
 use rust_decimal::prelude::*;
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::time::Duration;
 mod error;
 pub use error::Error;
@@ -10,6 +10,7 @@ mod browser_info;
 pub use browser_info::BrowserInfo;
 mod pay_with_card_on_file;
 mod pay_with_new_card_on_file;
+mod pay_with_swish;
 mod payment;
 mod refund;
 pub mod prelude {
@@ -17,7 +18,7 @@ pub mod prelude {
         action::{Action, Scheme as SchemeAction, SchemeRedirectData},
         browser_info::BrowserInfo,
         payment::{RefusalReason, Response},
-        Currency, Gateway,
+        Currency, Error, Gateway,
     };
 }
 
@@ -127,82 +128,32 @@ impl Gateway {
             .await
             .unwrap_or_else(|_| String::from("Could not retrieve body text."));
 
-        if status.as_u16() < 200 || status.as_u16() >= 300 {
-            // #[derive(Deserialize, Debug, Clone)]
-            // #[serde(rename_all = "camelCase")]
-            // struct ApiError {
-            //     pub meta: Option<Meta>,
-            // }
+        let status = status.as_u16();
+        if status < 200 || status >= 300 {
+            #[derive(Deserialize, Debug, Clone)]
+            #[serde(rename_all = "camelCase")]
+            struct ApiError {
+                pub status: u16,
+                pub error_code: String,
+                pub message: String,
+                pub error_type: String,
+                pub psp_reference: String,
+            }
 
-            // let api_error: ApiError =
-            //     serde_json::from_str(&text).unwrap_or_else(|_| ApiError { meta: None });
+            let api_error: ApiError = serde_json::from_str(&text).map_err(|err| {
+                Error::Unspecified(format!(
+                    "could not parse api error from '{}' ({})",
+                    text, err
+                ))
+            })?;
 
-            // let meta = match api_error.meta {
-            //     Some(m) => m,
-            //     None => {
-            //         return Err(Error::ApiError(
-            //             status.as_u16().to_string(),
-            //             "unknown".to_string(),
-            //             None,
-            //             None,
-            //             text,
-            //         ))
-            //     }
-            // };
-
-            // let action = match meta.action {
-            //     Some(m) => m,
-            //     None => {
-            //         return Err(Error::ApiError(
-            //             status.as_u16().to_string(),
-            //             "unknown".to_string(),
-            //             None,
-            //             None,
-            //             text,
-            //         ))
-            //     }
-            // };
-
-            // let code = match action.code {
-            //     Some(m) => m,
-            //     None => {
-            //         return Err(Error::ApiError(
-            //             status.as_u16().to_string(),
-            //             "unknown".to_string(),
-            //             None,
-            //             None,
-            //             text,
-            //         ))
-            //     }
-            // };
-
-            // let source = match action.source {
-            //     Some(m) => m,
-            //     None => {
-            //         return Err(Error::ApiError(
-            //             status.as_u16().to_string(),
-            //             "unknown".to_string(),
-            //             None,
-            //             None,
-            //             text,
-            //         ))
-            //     }
-            // };
-
-            // let (enduser_message, merchant_message) = match meta.message {
-            //     Some(m) => (m.enduser, m.merchant),
-            //     None => (None, None),
-            // };
-
-            // return Err(Error::ApiError(
-            //     code,
-            //     source,
-            //     enduser_message,
-            //     merchant_message,
-            //     text,
-            // ));
-
-            todo!()
+            return Err(Error::ApiError(error::ApiError::Other {
+                status: api_error.status,
+                error_code: api_error.error_code,
+                message: api_error.message,
+                error_type: api_error.error_type,
+                psp_reference: api_error.psp_reference,
+            }));
         }
 
         let body: T = match serde_json::from_str(&text) {

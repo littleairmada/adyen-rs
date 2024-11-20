@@ -3,6 +3,7 @@ use serde::Serialize;
 
 impl Gateway {
     // https://docs.adyen.com/payment-methods/cards/custom-card-integration/#make-a-payment
+    // https://docs.adyen.com/development-resources/testing/3d-secure-2-authentication/#test-cards
     pub async fn pay_with_new_card_on_file<'a>(
         &self,
         amount: u64,
