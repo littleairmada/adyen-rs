@@ -13,9 +13,7 @@ impl Gateway {
             three_d_s_result: &'a str,
         }
 
-        let details = Details {
-            three_d_s_result
-        };
+        let details = Details { three_d_s_result };
 
         #[derive(Serialize)]
         #[serde(rename_all = "camelCase")]
@@ -23,9 +21,7 @@ impl Gateway {
             details: Details<'a>,
         }
 
-        let body = Request {
-            details,
-        };
+        let body = Request { details };
 
         let url = "https://checkout-test.adyen.com/v71/payments/details";
         let res: payment::Response = self.post(url, &body).await?;
