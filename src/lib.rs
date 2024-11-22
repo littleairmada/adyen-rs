@@ -13,6 +13,7 @@ mod pay_with_new_card_on_file;
 mod pay_with_swish;
 mod payment;
 mod refund;
+mod set_payment_details;
 pub mod prelude {
     pub use super::{
         action::{Action, Scheme as SchemeAction, SchemeRedirectData},
