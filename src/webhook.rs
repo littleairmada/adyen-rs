@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::Amount;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -21,136 +21,136 @@ pub enum NotificationRequestItem {
         psp_reference: String,
         merchant_reference: String,
         amount: Amount,
-    }, 
-    
+    },
+
     // The success field informs you of the outcome of a request to adjust the authorised amount.
     #[serde(rename_all = "camelCase")]
-    AuthorisationAdjustment {}, 
-    
+    AuthorisationAdjustment {},
+
     // The success field informs you of the outcome of a request to cancel a payment.
     #[serde(rename_all = "camelCase")]
-    Cancellation {}, 
-    
+    Cancellation {},
+
     // The success field informs you of the outcome of a request to cancel or refund a payment.
     #[serde(rename_all = "camelCase")]
-    CancelOrRefund {}, 
-    
+    CancelOrRefund {},
+
     // The success field informs you of the outcome of a request to capture a payment.
     #[serde(rename_all = "camelCase")]
-    Capture {}, 
-    
+    Capture {},
+
     // The capture failed due to rejection by the card scheme.
     #[serde(rename_all = "camelCase")]
-    CaptureFailed {}, 
-    
+    CaptureFailed {},
+
     // The original payment has expired on the Adyen payments platform.
     #[serde(rename_all = "camelCase")]
-    Expire {}, 
-    
+    Expire {},
+
     // The payment has been handled outside the Adyen payments platform.
     #[serde(rename_all = "camelCase")]
-    HandledExternally {}, 
-    
+    HandledExternally {},
+
     // Sent when the first payment for your payment request is a partial payment, and an order has been created.
     #[serde(rename_all = "camelCase")]
-    OrderOpened {}, 
-    
+    OrderOpened {},
+
     // The success field informs you of the outcome of the shopper's last payment when paying for an order in partial payments.
     #[serde(rename_all = "camelCase")]
-    OrderClosed {}, 
-    
+    OrderClosed {},
+
     // The success field informs you of the outcome of a request to refund a payment.
     #[serde(rename_all = "camelCase")]
-    Refund {}, 
-    
+    Refund {},
+
     // The refund failed due to a rejection by the card scheme.
     #[serde(rename_all = "camelCase")]
-    RefundFailed {}, 
-    
+    RefundFailed {},
+
     // The refunded amount has been returned to Adyen, and is back in your account.
     #[serde(rename_all = "camelCase")]
-    RefundedReversed {}, 
-    
+    RefundedReversed {},
+
     // The success field informs you of the outcome of a request to refund with data.
     #[serde(rename_all = "camelCase")]
-    RefundWithData {}, 
-    
+    RefundWithData {},
+
     // A new report is available.
     #[serde(rename_all = "camelCase")]
-    ReportAvailable {}, 
-    
+    ReportAvailable {},
+
     // The success field informs you of the outcome of a request to cancel an unreferenced POS refund.
     #[serde(rename_all = "camelCase")]
-    VoidPendingRefund {}, 
-    
+    VoidPendingRefund {},
+
     // A payment was charged back, and the funds were deducted from your account.
     #[serde(rename_all = "camelCase")]
-    Chargeback {}, 
-    
+    Chargeback {},
+
     // A chargeback has been defended towards the issuing bank.
     #[serde(rename_all = "camelCase")]
-    ChargebackReversed {}, 
-    
+    ChargebackReversed {},
+
     // The dispute process has opened.
     #[serde(rename_all = "camelCase")]
-    NotificationOfChargeback {}, 
-    
+    NotificationOfChargeback {},
+
     // The alert passed on by issuers to schemes and subsequently to processors.
     #[serde(rename_all = "camelCase")]
-    NotificationOfFraud {}, 
-    
+    NotificationOfFraud {},
+
     // Your pre-arbitration case has been declined by the cardholder's bank.
     #[serde(rename_all = "camelCase")]
-    PrearbitrationLost {}, 
-    
+    PrearbitrationLost {},
+
     // Your pre-arbitration case has been accepted by the cardholder's bank.
     #[serde(rename_all = "camelCase")]
-    PrearbitrationWon {}, 
-    
+    PrearbitrationWon {},
+
     // A shopper has opened an RFI (Request for Information) case with the bank.
     #[serde(rename_all = "camelCase")]
-    RequestForInformation {}, 
-    
+    RequestForInformation {},
+
     // The issuing bank declined the material submitted during defense of the original chargeback.
     #[serde(rename_all = "camelCase")]
-    SecondChargeback {}, 
-    
+    SecondChargeback {},
+
     // The payout has expired.
     #[serde(rename_all = "camelCase")]
-    PayoutExpire {}, 
-    
+    PayoutExpire {},
+
     // The user reviewing the payout declined it.
     #[serde(rename_all = "camelCase")]
-    PayoutDecline {}, 
-    
+    PayoutDecline {},
+
     // The success field informs you of the outcome of a payout request.
     #[serde(rename_all = "camelCase")]
-    PayoutThirdparty {}, 
-    
+    PayoutThirdparty {},
+
     // The financial institution rejected the payout.
     #[serde(rename_all = "camelCase")]
-    PaidoutReversed {}, 
-    
+    PaidoutReversed {},
+
     // The offer has expired.
     #[serde(rename_all = "camelCase")]
-    OfferClosed {}, 
-    
+    OfferClosed {},
+
     // A recurring contract has been created.
     #[serde(rename_all = "camelCase")]
-    RecurringContract {}, 
-    
+    RecurringContract {},
+
     // The refund for the payment will be performed after the payment is captured.
     #[serde(rename_all = "camelCase")]
-    PostponedRefund {}, 
-    
+    PostponedRefund {},
+
     // An authentication-only flow was performed.
     #[serde(rename_all = "camelCase")]
-    Authentication {}, 
-    
+    Authentication {},
+
     // The manual review triggered by risk rules was accepted.
     #[serde(rename_all = "camelCase")]
-    ManualReviewAccept {}, 
-    
+    ManualReviewAccept {},
+
     // The manual review triggered by risk rules was rejected.
     #[serde(rename_all = "camelCase")]
     ManualReviewReject {},
@@ -158,8 +158,15 @@ pub enum NotificationRequestItem {
 
 #[derive(Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
+pub struct NotificationItem {
+    #[serde(rename = "NotificationRequestItem")]
+    pub notification_request_item: NotificationRequestItem,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct Webhook {
     pub live: String,
 
-    pub notification_items: Vec<NotificationRequestItem>,
+    pub notification_items: Vec<NotificationItem>,
 }
