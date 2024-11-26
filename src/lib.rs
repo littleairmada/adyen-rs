@@ -6,6 +6,7 @@ pub use error::Error;
 mod currency;
 pub use currency::Currency;
 mod action;
+pub use action::Action;
 mod browser_info;
 pub use browser_info::BrowserInfo;
 mod pay_with_card_on_file;
@@ -14,6 +15,10 @@ mod pay_with_swish;
 mod payment;
 mod refund;
 mod set_payment_details;
+pub mod webhook;
+pub use webhook::Webhook;
+mod amount;
+pub use amount::Amount;
 pub mod prelude {
     pub use super::{
         action::{Action, Scheme as SchemeAction, SchemeRedirectData},
