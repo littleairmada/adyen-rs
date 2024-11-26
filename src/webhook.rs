@@ -14,7 +14,7 @@ pub enum NotificationRequestItem {
     // The success field informs you of the outcome of a payment request.
     #[serde(rename_all = "camelCase")]
     Authorisation {
-        aditional_data: AdditionalData,
+        additional_data: AdditionalData,
         success: String,
         event_date: String,
         merchant_account_code: String,
