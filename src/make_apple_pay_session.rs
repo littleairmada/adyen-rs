@@ -5,12 +5,12 @@ impl Gateway {
     // https://docs.adyen.com/payment-methods/apple-pay/api-only/
     pub async fn make_apple_pay_session<'a>(
         &self,
-        merchant_account: &'a str,
         country_code: &'a str,
         amount: &'a amount::Amount,
         channel: &'a str,
         display_name: &'a str,
         domain_name: &'a str,
+        merchant_account: &'a str,
     ) -> Result<String, Error> {
         #[derive(Serialize)]
         #[serde(rename_all = "camelCase")]

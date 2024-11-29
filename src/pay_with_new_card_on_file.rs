@@ -16,13 +16,13 @@ impl Gateway {
         encrypted_security_code: &'a str,
         holder_name: &'a Option<&'a str>,
         return_url: &'a str,
-        merchant_account: &'a str,
         channel: &'a Option<&'a str>,
         browser_info: &'a Option<&'a BrowserInfo>,
         shopper_email: &'a Option<&'a str>,
         shopper_i_p: &'a Option<&'a str>,
         origin: &'a Option<&'a str>,
         three_d_s_preferred: bool,
+        merchant_account: &'a str,
     ) -> Result<payment::Response, Error> {
         #[derive(Serialize)]
         #[serde(rename_all = "camelCase")]

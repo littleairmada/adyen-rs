@@ -52,6 +52,7 @@ impl std::error::Error for Error {}
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let g;
         let text = match self {
             Error::Unspecified(g) => g,
             // Error::ParseError(g) => g,
@@ -63,7 +64,10 @@ impl fmt::Display for Error {
             // Error::Throttling => "throttling",
             // Error::ChecksumValidationError => "failed checksum validation",
             Error::ConversionError(g) => g,
-            Error::UnsupportedPaymentMethod => "unsupported payment method",
+            Error::UnsupportedPaymentMethod => {
+                g = String::from("unsupported payment method");
+                &g
+            }
         };
         write!(f, "{}", text)
     }
