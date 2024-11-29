@@ -6,16 +6,22 @@ use std::fmt;
 pub enum ApiError {
     Other {
         status: u16,
+
         error_code: String,
+
         message: String,
+
         error_type: String,
-        psp_reference: String,
+
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[serde(default)]
+        psp_reference: Option<String>,
     },
 }
 
-impl From<(u16, String, String, String, String)> for ApiError {
+impl From<(u16, String, String, String, Option<String>)> for ApiError {
     #[track_caller]
-    fn from(err: (u16, String, String, String, String)) -> Self {
+    fn from(err: (u16, String, String, String, Option<String>)) -> Self {
         let (status, error_code, message, error_type, psp_reference) = err;
         match error_code.as_str() {
             _ => ApiError::Other {
@@ -39,6 +45,7 @@ pub enum Error {
     // Throttling,
     // ChecksumValidationError,
     ConversionError(String),
+    UnsupportedPaymentMethod,
 }
 
 impl std::error::Error for Error {}
@@ -56,6 +63,7 @@ impl fmt::Display for Error {
             // Error::Throttling => "throttling",
             // Error::ChecksumValidationError => "failed checksum validation",
             Error::ConversionError(g) => g,
+            Error::UnsupportedPaymentMethod => "unsupported payment method",
         };
         write!(f, "{}", text)
     }

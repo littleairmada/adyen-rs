@@ -9,6 +9,8 @@ mod action;
 pub use action::Action;
 mod browser_info;
 pub use browser_info::BrowserInfo;
+mod make_apple_pay_session;
+mod pay_with_apple_pay;
 mod pay_with_card_on_file;
 mod pay_with_new_card_on_file;
 mod pay_with_swish;
@@ -140,10 +142,15 @@ impl Gateway {
             #[serde(rename_all = "camelCase")]
             struct ApiError {
                 pub status: u16,
+
                 pub error_code: String,
+
                 pub message: String,
+
                 pub error_type: String,
-                pub psp_reference: String,
+
+                #[serde(default)]
+                pub psp_reference: Option<String>,
             }
 
             let api_error: ApiError = serde_json::from_str(&text).map_err(|err| {
