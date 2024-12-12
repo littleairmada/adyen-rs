@@ -21,6 +21,7 @@ pub mod webhook;
 pub use webhook::Webhook;
 mod amount;
 pub use amount::Amount;
+pub use payment::RefusalReason;
 pub mod prelude {
     pub use super::{
         action::{Action, Scheme as SchemeAction, SchemeRedirectData},

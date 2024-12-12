@@ -12,7 +12,9 @@ pub struct AdditionalData {
     pub payment_method: String, // visa, mastercard, etc.
 
     #[serde(rename = "recurring.recurringDetailReference")]
-    pub recurring_detail_reference: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
+    pub recurring_detail_reference: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
