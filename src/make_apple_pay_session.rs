@@ -54,8 +54,8 @@ impl Gateway {
             payment_methods: Vec<PaymentMethod>,
         }
 
-        let url = "https://checkout-test.adyen.com/v71/paymentMethods";
-        let res: PaymentMethodsResponse = self.post(url, &body).await?;
+        let url = format!("{}/v71/paymentMethods", self.base_api_url);
+        let res: PaymentMethodsResponse = self.post(&url, &body).await?;
 
         // Get merchant identifier.
         let merchant_identifier = res
@@ -86,8 +86,8 @@ impl Gateway {
             pub data: String,
         }
 
-        let url = "https://checkout-test.adyen.com/v71/applePay/sessions";
-        let res: ApplePaySession = self.post(url, &body).await?;
+        let url = format!("{}/v71/applePay/sessions", self.base_api_url);
+        let res: ApplePaySession = self.post(&url, &body).await?;
 
         Ok(res.data)
     }

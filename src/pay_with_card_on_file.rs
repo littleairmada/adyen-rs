@@ -62,8 +62,8 @@ impl Gateway {
             merchant_account,
         };
 
-        let url = "https://checkout-test.adyen.com/v71/payments";
-        let res: payment::Response = self.post(url, &body).await?;
+        let url = format!("{}/v71/payments", self.base_api_url);
+        let res: payment::Response = self.post(&url, &body).await?;
 
         Ok(res)
     }

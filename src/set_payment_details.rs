@@ -23,8 +23,8 @@ impl Gateway {
 
         let body = Request { details };
 
-        let url = "https://checkout-test.adyen.com/v71/payments/details";
-        let res: payment::Response = self.post(url, &body).await?;
+        let url = format!("{}/v71/payments/details", self.base_api_url);
+        let res: payment::Response = self.post(&url, &body).await?;
 
         Ok(res)
     }

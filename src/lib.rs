@@ -24,6 +24,7 @@ pub use amount::Amount;
 pub use payment::RefusalReason;
 pub mod prelude {
     pub use super::{
+        Environment,
         action::{Action, Scheme as SchemeAction, SchemeRedirectData},
         browser_info::BrowserInfo,
         payment::{RefusalReason, Response},
@@ -31,9 +32,15 @@ pub mod prelude {
     };
 }
 
+pub enum Environment {
+    Test { api_key: String },
+    Live { api_key: String, url_prefix: String },
+}
+
 pub struct Gateway {
     client: reqwest::Client,
-    _api_key: String,
+    _environment: Environment,
+    base_api_url: String,
 }
 
 pub fn convert_decimal_into_minor_units<'a>(
@@ -65,7 +72,14 @@ pub fn convert_decimal_into_minor_units<'a>(
 }
 
 impl Gateway {
-    pub fn new(api_key: String, timeout: Option<Duration>) -> Result<Gateway, Error> {
+    pub fn new(environment: Environment, timeout: Option<Duration>) -> Result<Gateway, Error> {
+        let base_api_url = match &environment {
+            Environment::Test { .. } => format!("https://checkout-test.adyen.com"),
+            Environment::Live { url_prefix, .. } => {
+                format!("https://{}-checkout-live.adyen.com", url_prefix)
+            }
+        };
+
         let mut headers = reqwest::header::HeaderMap::new();
         headers.insert(
             "Content-Type",
@@ -75,6 +89,10 @@ impl Gateway {
             "Accept",
             reqwest::header::HeaderValue::from_static("application/json"),
         );
+
+        let api_key = match &environment {
+            Environment::Test { api_key } | Environment::Live { api_key, .. } => api_key,
+        };
 
         let x_api_key_header_value = format!("{}", api_key);
         let x_api_key_header = match reqwest::header::HeaderValue::from_str(&x_api_key_header_value)
@@ -112,7 +130,8 @@ impl Gateway {
 
         Ok(Gateway {
             client,
-            _api_key: api_key,
+            _environment: environment,
+            base_api_url,
         })
     }
 

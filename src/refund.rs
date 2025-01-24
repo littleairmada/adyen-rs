@@ -42,8 +42,8 @@ impl Gateway {
         struct Response {}
 
         let url = format!(
-            "https://checkout-test.adyen.com/v71/payments/{}/refunds",
-            psp_reference
+            "{}/v71/payments/{}/refunds",
+            self.base_api_url, psp_reference
         );
         let _res: Response = self.post(&url, &body).await?;
 
