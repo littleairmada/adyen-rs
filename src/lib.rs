@@ -24,11 +24,10 @@ pub use amount::Amount;
 pub use payment::RefusalReason;
 pub mod prelude {
     pub use super::{
-        Environment,
         action::{Action, Scheme as SchemeAction, SchemeRedirectData},
         browser_info::BrowserInfo,
         payment::{RefusalReason, Response},
-        Currency, Error, Gateway,
+        Currency, Environment, Error, Gateway,
     };
 }
 
@@ -76,7 +75,10 @@ impl Gateway {
         let base_api_url = match &environment {
             Environment::Test { .. } => format!("https://checkout-test.adyen.com"),
             Environment::Live { url_prefix, .. } => {
-                format!("https://{}-checkout-live.adyen.com", url_prefix)
+                format!(
+                    "https://{}-checkout-live.adyenpayments.com/checkout",
+                    url_prefix
+                )
             }
         };
 
