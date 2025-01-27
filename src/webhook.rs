@@ -29,7 +29,14 @@ pub enum NotificationRequestItem {
 
     // The success field informs you of the outcome of a request to cancel a payment.
     #[serde(rename_all = "camelCase")]
-    Cancellation {},
+    Cancellation {
+        success: String,
+        event_date: String,
+        merchant_account_code: String,
+        psp_reference: String,
+        merchant_reference: String,
+        amount: Amount,
+    },
 
     // The success field informs you of the outcome of a request to cancel or refund a payment.
     #[serde(rename_all = "camelCase")]
