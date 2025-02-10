@@ -58,11 +58,13 @@ pub enum NotificationRequestItem {
     #[serde(rename_all = "camelCase")]
     HandledExternally {},
 
-    // Sent when the first payment for your payment request is a partial payment, and an order has been created.
+    // Sent when the first payment for your payment request is a partial payment, and an order has
+    // been created.
     #[serde(rename_all = "camelCase")]
     OrderOpened {},
 
-    // The success field informs you of the outcome of the shopper's last payment when paying for an order in partial payments.
+    // The success field informs you of the outcome of the shopper's last payment when paying for an
+    // order in partial payments.
     #[serde(rename_all = "camelCase")]
     OrderClosed {},
 
@@ -86,7 +88,8 @@ pub enum NotificationRequestItem {
     #[serde(rename_all = "camelCase")]
     ReportAvailable {},
 
-    // The success field informs you of the outcome of a request to cancel an unreferenced POS refund.
+    // The success field informs you of the outcome of a request to cancel an unreferenced POS
+    // refund.
     #[serde(rename_all = "camelCase")]
     VoidPendingRefund {},
 

@@ -27,6 +27,7 @@ pub enum Scheme {
     #[serde(rename_all = "camelCase")]
     ThreeDS2 {
         payment_data: String,
+        authorisation_token: String,
         subtype: String,
         token: String,
     },
