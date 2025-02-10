@@ -56,7 +56,7 @@ pub enum Response {
 
     /// The issuer requires further shopper interaction before the payment can be authenticated.
     /// Returned for 3D Secure 2 transactions.
-    ChallengeShopper {},
+    ChallengeShopper { action: Action },
 
     /// There was an error when the payment was being processed. The reason is given in the
     /// refusalReason field. This is a final state.
