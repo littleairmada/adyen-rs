@@ -72,6 +72,8 @@ impl Gateway {
         #[serde(rename_all = "camelCase")]
         struct AuthenticationData {
             three_d_s_request_data: ThreeDSRequestData,
+
+            attempt_authentication: String,
         }
 
         #[derive(Serialize)]
@@ -122,6 +124,7 @@ impl Gateway {
                     three_d_s_request_data: ThreeDSRequestData {
                         native_three_d_s: "preferred".to_string(),
                     },
+                    attempt_authentication: "always".to_string(),
                 }),
                 false => None,
             },
