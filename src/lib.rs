@@ -19,6 +19,7 @@ mod pay_with_vipps;
 mod payment;
 mod refund;
 mod set_payment_details;
+mod set_redirect_result;
 pub mod webhook;
 pub use webhook::Webhook;
 mod amount;
