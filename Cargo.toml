@@ -1,6 +1,6 @@
 [package]
 name = "adyen"
-version = "0.1.20"
+version = "0.1.21"
 edition = "2021"
 license = "MIT"
 description = "A library for integrating with the Adyen payment provider."

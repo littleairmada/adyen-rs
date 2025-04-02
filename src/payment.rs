@@ -49,7 +49,9 @@ pub enum Response {
     #[serde(rename_all = "camelCase")]
     Cancelled {
         #[serde(rename = "refusalReasonCode")]
-        refusal_reason: RefusalReason,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[serde(default)]
+        refusal_reason: Option<RefusalReason>,
 
         psp_reference: String,
     },
