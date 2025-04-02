@@ -54,4 +54,7 @@ pub enum Action {
         url: String,
         r#type: String,
     },
+
+    #[serde(rename_all = "camelCase")]
+    GooglePay(Scheme),
 }
