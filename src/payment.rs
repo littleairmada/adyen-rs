@@ -11,6 +11,11 @@ pub struct AdditionalData {
     pub expiry_date: String,    // The expiry date on the card (M/yyyy).
     pub payment_method: String, // visa, mastercard, etc.
 
+    /// The Adyen alias of the card.
+    /// https://docs.adyen.com/api-explorer/Checkout/latest/post/payments#responses-200-additionalData-listOfValues-alias
+    pub alias: Option<String>,
+    pub alias_type: Option<String>,
+
     #[serde(rename = "recurring.recurringDetailReference")]
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(default)]
